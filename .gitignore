@@ -1,0 +1,38 @@
+```
+# Dependencies
+.dart_tool/
+.packages
+.pub/
+
+# Build outputs
+build/
+dist/
+
+# Logs
+*.log
+**/logs
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+htmlcov/
+*.lcov
+
+# Testing
+.dart_tool/test_results/
+```
