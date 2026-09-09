@@ -104,6 +104,33 @@ class EventBook {
     print('[EventBook] Removed event: $id');
   }
 
+  /// Import multiple events atomically (for holidays).
+  /// Idempotency key = "holiday_<title>_<mm-dd>" so re-import never duplicates.
+  Future<bool> import(List<CalEvent> events) async {
+    if (events.isEmpty) return false;
+
+    for (final event in events) {
+      final idempotencyKey = 'holiday_${event.title}_${event.date.month.toString().padLeft(2, '0')}-${event.date.day.toString().padLeft(2, '0')}';
+      
+      // Check idempotency
+      if (!_cache.tryAdd(idempotencyKey)) {
+        continue; // Skip duplicate
+      }
+
+      // Validate
+      final error = validate(event);
+      if (error != null) {
+        continue; // Skip invalid events
+      }
+
+      // Repository write
+      await _repository.save(event);
+    }
+
+    print('[EventBook] Imported ${events.length} events');
+    return true;
+  }
+
   /// Compute upcoming occurrences for all events.
   List<UpcomingOccurrence> nextOccurrences(List<CalEvent> events) {
     final now = DateTime.now();

@@ -9,6 +9,8 @@ import '../events/ui/event_form_sheet.dart';
 import '../grid/grid_widget.dart';
 import 'countdown_widget.dart';
 import '../../anticipate/logic/permission_manager.dart';
+import 'logic/milestones.dart';
+import 'ui/milestone_card.dart';
 
 /// Provider for loading state.
 final loadingProvider = StateProvider<bool>((ref) => true);
@@ -136,6 +138,9 @@ class _SoonScreenState extends ConsumerState<SoonScreen> {
     }
 
     final nearest = occurrences.first;
+    
+    // Compute milestones for yearly/birthday events
+    final milestones = Milestones.compute(events);
 
     return Scaffold(
       backgroundColor: AppTokens.backgroundPrimary,
@@ -184,6 +189,24 @@ class _SoonScreenState extends ConsumerState<SoonScreen> {
                 ),
               ),
               const SizedBox(height: AppTokens.spacingXl),
+              // Milestones section
+              if (milestones.isNotEmpty) ...[
+                Text(
+                  'Milestones',
+                  style: AppTokens.headlineMedium,
+                ),
+                const SizedBox(height: AppTokens.spacingMd),
+                ...milestones.map((m) => Padding(
+                  padding: const EdgeInsets.only(bottom: AppTokens.spacingSm),
+                  child: MilestoneCard(
+                    milestone: m,
+                    onTap: () {
+                      // Could open edit sheet here
+                    },
+                  ),
+                )),
+                const SizedBox(height: AppTokens.spacingXl),
+              ],
               // Feed sorted by daysUntil
               Text(
                 'Upcoming',

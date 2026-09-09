@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/services.dart';
 import '../../core/tokens/app_tokens.dart';
+import '../../core/format/app_formatters.dart';
 import '../domain/models.dart';
 import '../logic/event_book.dart';
 
@@ -90,6 +92,8 @@ class _EventFormSheetState extends ConsumerState<EventFormSheet> {
       // If onSave callback is provided, use it (for permission flow)
       if (widget.onSave != null) {
         await widget.onSave!(event);
+        // Haptic feedback on save
+        HapticFeedback.mediumImpact();
         return;
       }
 
@@ -102,6 +106,9 @@ class _EventFormSheetState extends ConsumerState<EventFormSheet> {
       } else {
         await eventBook.edit(event, idempotencyKey);
       }
+
+      // Haptic feedback on save
+      HapticFeedback.mediumImpact();
 
       if (mounted) {
         Navigator.pop(context);
@@ -177,7 +184,7 @@ class _EventFormSheetState extends ConsumerState<EventFormSheet> {
                       ),
                       const SizedBox(width: AppTokens.spacingMd),
                       Text(
-                        '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
+                        '${AppFormatters.dateShort(_selectedDate)}',
                         style: AppTokens.bodyLarge,
                       ),
                       const Spacer(),
