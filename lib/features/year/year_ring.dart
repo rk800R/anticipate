@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/tokens/app_tokens.dart';
@@ -85,30 +86,30 @@ class YearRingPainter extends CustomPainter {
       // Calculate day of year for event
       final startOfYear = DateTime(today.year, 1, 1);
       var dayOfYear = eventDate.difference(startOfYear).inDays + 1;
-      
+
       // For yearly/birthday events in future years, use their occurrence this year
       if (event.kind != EventKind.once && eventDate.year > today.year) {
         dayOfYear = ((eventDate.month - 1) * 30 + eventDate.day) % daysInYear + 1;
       }
-      
+
       // Clamp to valid range
       dayOfYear = ((dayOfYear - 1) % daysInYear + daysInYear) % daysInYear + 1;
-      
-      final angle = ((dayOfYear - 1) / daysInYear) * 2 * 3.14159 - 1.5708; // -π/2 to start at top
+
+      final angle = ((dayOfYear - 1) / daysInYear) * 2 * math.pi - math.pi / 2;
       final dotOffset = Offset(
-        center.dx + radius * (angle.cos()),
-        center.dy + radius * (angle.sin()),
+        center.dx + radius * math.cos(angle),
+        center.dy + radius * math.sin(angle),
       );
 
       // Calculate days until event for glow
       final eventThisYear = DateTime(today.year, eventDate.month, eventDate.day);
       final daysUntil = eventThisYear.difference(DateTime(today.year, today.month, today.day)).inDays;
-      
+
       // Draw event dot with color
       final dotPaint = Paint()
         ..color = Color(event.colorValue)
         ..style = PaintingStyle.fill;
-      
+
       // Glow radius based on proximity
       double glowRadius = 2;
       if (daysUntil >= 0) {
@@ -118,7 +119,7 @@ class YearRingPainter extends CustomPainter {
           glowRadius = 5; // Proximate
         }
       }
-      
+
       // Draw glow
       if (glowRadius > 2) {
         final glowPaint = Paint()
@@ -126,22 +127,23 @@ class YearRingPainter extends CustomPainter {
           ..style = PaintingStyle.fill;
         canvas.drawCircle(dotOffset, glowRadius, glowPaint);
       }
-      
+
       canvas.drawCircle(dotOffset, 4, dotPaint);
     }
 
     // Draw today marker (accent color)
-    final todayAngle = ((dayOfYear(today) - 1) / daysInYear) * 2 * 3.14159 - 1.5708;
+    final todayDayOfYear = _dayOfYear(today);
+    final todayAngle = ((todayDayOfYear - 1) / daysInYear) * 2 * math.pi - math.pi / 2;
     final todayOffset = Offset(
-      center.dx + radius * (todayAngle.cos()),
-      center.dy + radius * (todayAngle.sin()),
+      center.dx + radius * math.cos(todayAngle),
+      center.dy + radius * math.sin(todayAngle),
     );
-    
+
     final todayPaint = Paint()
       ..color = AppTokens.accent
       ..style = PaintingStyle.fill;
     canvas.drawCircle(todayOffset, 6, todayPaint);
-    
+
     // Today halo
     final todayHaloPaint = Paint()
       ..color = AppTokens.todayPulse.withOpacity(0.4)
@@ -149,22 +151,22 @@ class YearRingPainter extends CustomPainter {
     canvas.drawCircle(todayOffset, 10, todayHaloPaint);
   }
 
-  int dayOfYear(DateTime dt) {
+  int _dayOfYear(DateTime dt) {
     final startOfYear = DateTime(dt.year, 1, 1);
     return dt.difference(startOfYear).inDays + 1;
   }
 
   void _drawMonthTicks(Canvas canvas, Offset center, double radius) {
-    final monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+    final monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    
+
     for (int i = 0; i < 12; i++) {
-      final angle = (i / 12) * 2 * 3.14159 - 1.5708;
+      final angle = (i / 12) * 2 * math.pi - math.pi / 2;
       final tickOuter = Offset(
-        center.dx + (radius + 15) * (angle.cos()),
-        center.dy + (radius + 15) * (angle.sin()),
+        center.dx + (radius + 15) * math.cos(angle),
+        center.dy + (radius + 15) * math.sin(angle),
       );
-      
+
       // Draw tick
       final tickPaint = Paint()
         ..color = AppTokens.textSecondary.withOpacity(0.5)
@@ -172,13 +174,13 @@ class YearRingPainter extends CustomPainter {
         ..strokeWidth = 1;
       canvas.drawLine(
         Offset(
-          center.dx + (radius + 5) * (angle.cos()),
-          center.dy + (radius + 5) * (angle.sin()),
+          center.dx + (radius + 5) * math.cos(angle),
+          center.dy + (radius + 5) * math.sin(angle),
         ),
         tickOuter,
         tickPaint,
       );
-      
+
       // Draw month label
       final textPainter = TextPainter(
         text: TextSpan(
@@ -194,8 +196,8 @@ class YearRingPainter extends CustomPainter {
       textPainter.paint(
         canvas,
         Offset(
-          center.dx + (radius + 25) * (angle.cos()) - textPainter.width / 2,
-          center.dy + (radius + 25) * (angle.sin()) - textPainter.height / 2,
+          center.dx + (radius + 25) * math.cos(angle) - textPainter.width / 2,
+          center.dy + (radius + 25) * math.sin(angle) - textPainter.height / 2,
         ),
       );
     }
@@ -205,10 +207,4 @@ class YearRingPainter extends CustomPainter {
   bool shouldRepaint(covariant YearRingPainter oldDelegate) {
     return oldDelegate.events != events || oldDelegate.today != today;
   }
-}
-
-// Extension for cosine/sine on doubles
-extension on double {
-  double cos() => this;
-  double sin() => this;
 }

@@ -49,7 +49,7 @@ class AppTokens {
   static const Color todayPulse = Color(0xFF4FC3F7);
   
   /// Accent color for highlights
-  static const Color accent = Color(0xFF4FC3F7);
+  static const Color accent = Color(0xFF7C5CFF);
   
   /// Event dot base color
   static const Color eventDot = Color(0xFFFFAB40);
@@ -62,6 +62,12 @@ class AppTokens {
   
   /// Future day color
   static const Color futureDay = Color(0xFF616161);
+  
+  /// Dot radius
+  static const double radius = 8.0;
+  
+  /// Padding
+  static const double padding = 16.0;
   
   /// Text primary
   static const Color textPrimary = Color(0xFFFFFFFF);
