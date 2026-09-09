@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import '../../core/tokens/app_tokens.dart';
 import '../../core/format/app_formatters.dart';
 import '../events/domain/models.dart';
 import '../events/logic/event_book.dart';
+import '../events/ui/event_form_sheet.dart';
+import '../grid/grid_widget.dart';
 import 'countdown_widget.dart';
-import '../../grid/grid_widget.dart';
 
 /// Provider for loading state.
 final loadingProvider = StateProvider<bool>((ref) => true);
@@ -244,11 +246,11 @@ class _SoonScreenState extends ConsumerState<SoonScreen> {
   }
 
   void _openFormSheet() {
-    // Will be implemented in Task 9
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTokens.backgroundSecondary,
-      builder: (context) => const Text('Form coming soon'),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => EventFormSheet(),
     );
   }
 
