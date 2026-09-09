@@ -58,7 +58,7 @@ class EventBook {
     // Alarm hook
     await _alarmScheduler.scheduleRungs(e);
 
-    // Log (placeholder)
+    // Log
     print('[EventBook] Added event: ${e.id} - ${e.title}');
     
     return true;
@@ -86,7 +86,7 @@ class EventBook {
     // Schedule new alarms
     await _alarmScheduler.scheduleRungs(e);
 
-    // Log (placeholder)
+    // Log
     print('[EventBook] Edited event: ${e.id} - ${e.title}');
     
     return true;
@@ -100,7 +100,7 @@ class EventBook {
     // Repository delete
     await _repository.delete(id);
 
-    // Log (placeholder)
+    // Log
     print('[EventBook] Removed event: $id');
   }
 

@@ -229,47 +229,52 @@ class _SoonScreenState extends ConsumerState<SoonScreen> {
   Widget _buildEventTile(UpcomingOccurrence occ) {
     final isPast = occ.daysUntil < 0;
     
-    return Container(
-      margin: const EdgeInsets.only(bottom: AppTokens.spacingSm),
-      padding: const EdgeInsets.all(AppTokens.spacingMd),
-      decoration: BoxDecoration(
-        color: AppTokens.backgroundSecondary,
+    return Material(
+      color: AppTokens.backgroundSecondary,
+      borderRadius: BorderRadius.circular(AppTokens.spacingSm),
+      child: InkWell(
+        onTap: () {
+          // Could open edit sheet here
+        },
         borderRadius: BorderRadius.circular(AppTokens.spacingSm),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 4,
-            height: 40,
-            decoration: BoxDecoration(
-              color: occ.event.colorValue,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(width: AppTokens.spacingMd),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  occ.event.title,
-                  style: AppTokens.bodyLarge,
+        child: Padding(
+          padding: const EdgeInsets.all(AppTokens.spacingMd),
+          child: Row(
+            children: [
+              Container(
+                width: 4,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: occ.event.colorValue,
+                  borderRadius: BorderRadius.circular(2),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  isPast 
-                      ? '${AppFormatters.days(-occ.daysUntil)} since'
-                      : AppFormatters.days(occ.daysUntil),
-                  style: AppTokens.bodyMedium,
+              ),
+              const SizedBox(width: AppTokens.spacingMd),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      occ.event.title,
+                      style: AppTokens.bodyLarge,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      isPast 
+                          ? '${AppFormatters.days(-occ.daysUntil)} since'
+                          : AppFormatters.days(occ.daysUntil),
+                      style: AppTokens.bodyMedium,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              Text(
+                AppFormatters.dateShort(occ.occurrenceDate ?? DateTime.now()),
+                style: AppTokens.bodyMedium,
+              ),
+            ],
           ),
-          Text(
-            AppFormatters.dateShort(occ.occurrenceDate ?? DateTime.now()),
-            style: AppTokens.bodyMedium,
-          ),
-        ],
+        ),
       ),
     );
   }
