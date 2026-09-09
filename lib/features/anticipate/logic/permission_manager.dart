@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart' as fln;
 
 /// Permission status for notifications.
 enum PermissionStatus {
@@ -14,6 +15,8 @@ class PermissionManager {
   static const String _statusKey = 'notification_status';
   
   final Box<dynamic>? _box;
+  final fln.FlutterLocalNotificationsPlugin _notifications =
+      fln.FlutterLocalNotificationsPlugin();
 
   PermissionManager(this._box);
 
@@ -29,15 +32,28 @@ class PermissionManager {
 
   /// Request permission (only call once from event-save flow).
   /// Returns true if granted, false if declined or never asked.
-  /// Note: Real implementation requires flutter_local_notifications and platform code.
   Future<bool> requestPermission() async {
-    // For now, just mark as neverAsked since we can't actually request on desktop
-    // The real implementation comes later when testing on phone
     if (_box == null) return false;
     
-    // Store that we've asked (simulating "never asked" -> still never asked for fake impl)
-    await _box!.put(_statusKey, PermissionStatus.neverAsked.index);
-    return false; // Can't grant on desktop
+    final currentStatus = status;
+    if (currentStatus != PermissionStatus.neverAsked) {
+      // Already asked, don't ask again
+      return currentStatus == PermissionStatus.granted;
+    }
+    
+    // Request permission from the platform
+    final bool? granted = await _notifications
+        .resolvePlatformSpecificImplementation<
+            fln.AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
+    
+    if (granted == true) {
+      await persistStatus(PermissionStatus.granted);
+      return true;
+    } else {
+      await persistStatus(PermissionStatus.declined);
+      return false;
+    }
   }
 
   /// Persist a permission status.
