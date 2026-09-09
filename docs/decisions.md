@@ -210,3 +210,18 @@ One formatter owns all numbers and dates. "47 days" must look identical everywhe
 - Consistent number formatting
 - Centralized localization point
 - No formatting discrepancies
+
+---
+
+## D16: Grid Rendered via CustomPainter for Layer Blending
+
+**Status:** Approved  
+**Date:** 2024-01-01
+
+Grid rendered via `CustomPainter` for D14 layer-blending correctness (custom compositing of Opacity/Fill/Halo/Overlay). Per-dot `Semantics` nodes provide keys and A11y labels. Painter↔widget balance revisited only on measured jank in Phase 5.
+
+**Consequences:**
+- Direct mapping to D14 layer model
+- Clean implementation of 50/50 color blends
+- Avoids deep widget nesting for layered effects
+- Performance optimization deferred until measurement
