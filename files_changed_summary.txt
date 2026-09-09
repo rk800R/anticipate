@@ -1,0 +1,7 @@
+Files changed in polish sweep:
+1. lib/features/events/logic/event_book.dart - Removed "(placeholder)" comments from log statements
+2. lib/core/format/app_formatters.dart - Added number() static method for formatted number output
+3. lib/features/soon/ui/countdown_widget.dart - Use AppFormatters.number() instead of toString()
+4. lib/features/soon/ui/milestone_card.dart - Added HapticFeedback.mediumImpact() on tap
+5. lib/features/events/ui/event_form_sheet.dart - Added HapticFeedback on date picker, kind selector, color swatches
+6. lib/features/soon/ui/soon_screen.dart - Added Material/InkWell ripple to event tiles

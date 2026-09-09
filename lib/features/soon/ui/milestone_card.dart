@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../events/domain/models.dart';
 import '../../../core/format/app_formatters.dart';
@@ -22,7 +23,10 @@ class MilestoneCard extends StatelessWidget {
       color: AppTokens.surface,
       borderRadius: BorderRadius.circular(AppTokens.radius),
       child: InkWell(
-        onTap: onTap,
+        onTap: () {
+          HapticFeedback.mediumImpact();
+          onTap?.call();
+        },
         borderRadius: BorderRadius.circular(AppTokens.radius),
         child: Padding(
           padding: const EdgeInsets.all(AppTokens.padding),

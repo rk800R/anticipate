@@ -172,7 +172,10 @@ class _EventFormSheetState extends ConsumerState<EventFormSheet> {
               const SizedBox(height: AppTokens.spacingMd),
               // Date picker
               InkWell(
-                onTap: _selectDate,
+                onTap: () {
+                  HapticFeedback.mediumImpact();
+                  _selectDate();
+                },
                 borderRadius: BorderRadius.circular(AppTokens.spacingSm),
                 child: Padding(
                   padding: const EdgeInsets.all(AppTokens.spacingMd),
@@ -216,6 +219,7 @@ class _EventFormSheetState extends ConsumerState<EventFormSheet> {
                 ],
                 onChanged: (value) {
                   if (value != null) {
+                    HapticFeedback.mediumImpact();
                     setState(() {
                       _selectedKind = value;
                     });
@@ -236,6 +240,7 @@ class _EventFormSheetState extends ConsumerState<EventFormSheet> {
                   final isSelected = _selectedColor == color;
                   return GestureDetector(
                     onTap: () {
+                      HapticFeedback.mediumImpact();
                       setState(() {
                         _selectedColor = color;
                       });

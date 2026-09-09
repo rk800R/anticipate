@@ -1,32 +1,64 @@
 ```
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+*.class
+*.exe
+*.dll
+*.so
+*.a
+*.out
+
 # Dependencies
-.pub/
-.build/
-.packages
-
-# Logs
-*.log
-
-# Environment
+node_modules/
+venv/
+.venv/
 .env
 .env.local
-*.env.*
-
-# IDE
-.idea/
-.vscode/
-
-# Temporary files
-*.tmp
-*.swp
-
-# Coverage
-coverage/
-htmlcov/
-.coverage
+.env.*
 
 # Build outputs
-build/
 dist/
+build/
 target/
+*.jar
+*.war
+*.zip
+*.tar.gz
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Editors and IDEs
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Testing and coverage
+.coverage
+coverage/
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+
+# Flutter/Dart specific
+.dart_tool/
+.packages
+.pub-cache/
+build/
+*.g.dart
+*.freezed.dart
+
+# Original rules preserved
 ```

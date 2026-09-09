@@ -51,22 +51,22 @@ class CountdownWidget extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
       children: [
-        _buildUnit(parts['days']!.toString(), 'd'),
+        _buildUnit(AppFormatters.number(parts['days']!), 'd'),
         if (parts['days']! > 0) ...[
           const SizedBox(width: AppTokens.spacingXs),
-          _buildUnit(parts['hours']!.toString().padLeft(2, '0'), 'h'),
+          _buildUnit(AppFormatters.number(parts['hours']!, minLength: 2), 'h'),
           const SizedBox(width: AppTokens.spacingXs),
-          _buildUnit(parts['minutes']!.toString().padLeft(2, '0'), 'm'),
+          _buildUnit(AppFormatters.number(parts['minutes']!, minLength: 2), 'm'),
           const SizedBox(width: AppTokens.spacingXs),
-          _buildUnit(parts['seconds']!.toString().padLeft(2, '0'), 's'),
+          _buildUnit(AppFormatters.number(parts['seconds']!, minLength: 2), 's'),
         ] else ...[
           // For < 1 day, show h:m:s
           const SizedBox(width: AppTokens.spacingXs),
-          _buildUnit(parts['hours']!.toString(), 'h'),
+          _buildUnit(AppFormatters.number(parts['hours']!), 'h'),
           const SizedBox(width: AppTokens.spacingXs),
-          _buildUnit(parts['minutes']!.toString().padLeft(2, '0'), 'm'),
+          _buildUnit(AppFormatters.number(parts['minutes']!, minLength: 2), 'm'),
           const SizedBox(width: AppTokens.spacingXs),
-          _buildUnit(parts['seconds']!.toString().padLeft(2, '0'), 's'),
+          _buildUnit(AppFormatters.number(parts['seconds']!, minLength: 2), 's'),
         ],
       ],
     );

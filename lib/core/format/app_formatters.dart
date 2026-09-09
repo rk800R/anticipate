@@ -47,4 +47,12 @@ class AppFormatters {
     final parts = countdownParts(d);
     return "${parts['days']}:${parts['hours']}:${parts['minutes']}:${parts['seconds']}";
   }
+
+  /// Format a single number with optional zero-padding.
+  static String number(int n, {int? minLength}) {
+    if (minLength != null) {
+      return n.toString().padLeft(minLength, '0');
+    }
+    return n.toString();
+  }
 }
