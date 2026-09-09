@@ -48,6 +48,9 @@ class AppTokens {
   /// Today's pulse color
   static const Color todayPulse = Color(0xFF4FC3F7);
   
+  /// Accent color for highlights
+  static const Color accent = Color(0xFF4FC3F7);
+  
   /// Event dot base color
   static const Color eventDot = Color(0xFFFFAB40);
   
