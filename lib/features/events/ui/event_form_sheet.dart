@@ -8,10 +8,12 @@ import '../logic/event_book.dart';
 /// Bottom sheet form for adding/editing events.
 class EventFormSheet extends ConsumerStatefulWidget {
   final CalEvent? existingEvent;
+  final Function(CalEvent)? onSave;
 
   const EventFormSheet({
     Key? key,
     this.existingEvent,
+    this.onSave,
   }) : super(key: key);
 
   @override
@@ -85,6 +87,13 @@ class _EventFormSheetState extends ConsumerState<EventFormSheet> {
         color: _selectedColor,
       );
 
+      // If onSave callback is provided, use it (for permission flow)
+      if (widget.onSave != null) {
+        await widget.onSave!(event);
+        return;
+      }
+
+      // Otherwise use the default flow
       final eventBook = ref.read(eventBookProvider);
       final idempotencyKey = const Uuid().v4();
 

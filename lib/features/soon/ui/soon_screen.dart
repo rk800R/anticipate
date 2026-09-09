@@ -8,6 +8,7 @@ import '../events/logic/event_book.dart';
 import '../events/ui/event_form_sheet.dart';
 import '../grid/grid_widget.dart';
 import 'countdown_widget.dart';
+import '../../anticipate/logic/permission_manager.dart';
 
 /// Provider for loading state.
 final loadingProvider = StateProvider<bool>((ref) => true);
@@ -18,14 +19,19 @@ final eventsStreamProvider = StreamProvider<List<CalEvent>>((ref) {
   return repository.watchAll();
 });
 
-/// Placeholder provider for EventBook - will be wired in main.dart.
+/// Provider for EventBook - will be overridden in main.dart.
 final eventBookProvider = Provider<EventBook>((ref) {
   throw UnimplementedError('EventBook not initialized');
 });
 
-/// Placeholder provider for EventRepository - will be wired in main.dart.
+/// Provider for EventRepository - will be overridden in main.dart.
 final eventRepositoryProvider = Provider<EventRepository>((ref) {
   throw UnimplementedError('EventRepository not initialized');
+});
+
+/// Provider for PermissionManager - will be overridden in main.dart.
+final permissionManagerProvider = Provider<PermissionManager>((ref) {
+  throw UnimplementedError('PermissionManager not initialized');
 });
 
 /// Main SOON screen with three states: loading, empty, data.
@@ -250,7 +256,24 @@ class _SoonScreenState extends ConsumerState<SoonScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => EventFormSheet(),
+      builder: (context) => EventFormSheet(
+        onSave: (CalEvent event) async {
+          // Generate idempotency key
+          final String idempotencyKey = const Uuid().v4();
+          
+          // Check permission status on first save
+          final permissionManager = ref.read(permissionManagerProvider);
+          if (permissionManager.status == PermissionStatus.neverAsked) {
+            await permissionManager.requestPermission();
+          }
+          
+          // Save the event
+          final eventBook = ref.read(eventBookProvider);
+          await eventBook.add(event, idempotencyKey);
+          
+          if (mounted) Navigator.pop(context);
+        },
+      ),
     );
   }
 
